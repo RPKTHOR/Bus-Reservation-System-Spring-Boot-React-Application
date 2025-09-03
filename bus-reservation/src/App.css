@@ -1,0 +1,245 @@
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #ff0000aa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+/* Existing styles... */
+
+/* Timer Alert Animations */
+.alert-warning {
+  animation: pulse-warning 2s infinite;
+}
+
+.alert-danger {
+  animation: pulse-danger 1s infinite;
+}
+
+@keyframes pulse-warning {
+  0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+
+@keyframes pulse-danger {
+  0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+/* Seat Selection Enhancements */
+.seat-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.seats-grid button {
+  transition: all 0.3s ease;
+}
+
+.seats-grid button:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Payment Card */
+.payment-card {
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Ticket Enhancements */
+.ticket-card {
+  border: 2px solid #007bff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.journey-point {
+  border: 1px solid #dee2e6;
+  transition: transform 0.2s ease;
+}
+
+.journey-point:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Success Animation */
+.success-animation i {
+  animation: bounceIn 1s ease-out;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Loading States */
+.spinner-border {
+  animation: spinner-border 0.75s linear infinite;
+}
+
+/* Responsive Ticket */
+@media (max-width: 768px) {
+  .ticket-card {
+    margin: 10px;
+  }
+  
+  .journey-point {
+    margin-bottom: 10px;
+  }
+  
+  .qr-section img {
+    max-width: 150px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print,
+  .action-buttons,
+  .navbar,
+  .btn {
+    display: none !important;
+  }
+  
+  .ticket-card {
+    border: 2px solid #000;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+  
+  .card-header {
+    background: #f8f9fa !important;
+    color: #000 !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+}
+
+/* Status Badges */
+.badge {
+  font-size: 0.875em;
+  padding: 0.5em 0.75em;
+}
+
+/* Form Enhancements */
+.form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Sticky Elements */
+.sticky-top {
+  position: sticky;
+  top: 100px;
+  z-index: 1020;
+}
+
+/* Card Hover Effects */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+/* Trip Cards */
+.trip-card {
+  transition: all 0.3s ease;
+  border: 1px solid #e3e6f0;
+}
+
+.trip-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  border-color: #007bff;
+}
+
+.route-info {
+  background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.fare-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+/* Debug info (remove in production) */
+.debug-info {
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+/* Test data modal */
+.test-data-preview {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.creation-status {
+  background: #e7f3ff;
+  border-radius: 4px;
+  padding: 8px;
+  text-align: center;
+}
+
+/* Enhanced search form */
+.search-suggestions {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* Amount display enhancements */
+.amount-highlight {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.fare-breakdown {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+}
