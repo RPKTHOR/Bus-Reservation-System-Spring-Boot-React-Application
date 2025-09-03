@@ -29,46 +29,71 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtutil;
+    private final JwtUtil jwtUtil;
 
-@Transactional
-public User register(RegisterDTO dto) {
-    // Defensive copy to avoid ConcurrentModificationException
-    List<String> roleNames = List.copyOf(dto.getRoles());
-    List<Role> validRoles = roleNames.stream()
-        .map(roleName -> roleRepository.findByName(roleName))
-        .filter(Objects::nonNull)
-        .distinct()
-        .collect(Collectors.toList());
+    @Transactional
+    public User register(RegisterDTO dto) {
+        // Check if user already exists
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("User with this email already exists");
+        }
 
+        List<String> roleNames = List.copyOf(dto.getRoles());
+        List<Role> validRoles = roleNames.stream()
+            .map(roleName -> roleRepository.findByName(roleName))
+            .filter(Objects::nonNull)
+            .distinct()
+            .collect(Collectors.toList());
 
-    if (validRoles.isEmpty()) {
-        throw new RuntimeException("No valid roles found");
+        if (validRoles.isEmpty()) {
+            throw new RuntimeException("No valid roles found");
+        }
+
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRoles(new HashSet<>(validRoles));
+
+        return userRepository.save(user);
     }
 
-    User user = new User();
-    user.setName(dto.getName());
-    user.setEmail(dto.getEmail());
-    user.setPhone(dto.getPhone());
-    user.setPassword(passwordEncoder.encode(dto.getPassword()));
-    user.setRoles(new HashSet<>(validRoles));
+    public AuthResponseDTO login(LoginDTO dto) {
+        User user = userRepository.findByEmail(dto.getEmail())
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    return userRepository.save(user);
-}
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
 
-
-public AuthResponseDTO login(LoginDTO dto) {
-    User user = userRepository.findByEmail(dto.getEmail())
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-    if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-        throw new BadCredentialsException("Invalid password");
+        String token = jwtUtil.generateToken(user);
+        return new AuthResponseDTO(
+            token,
+            user.getName(),
+            user.getEmail(),
+            user.getRoles().stream().map(Role::getName).collect(Collectors.toList())
+        );
     }
 
-    String token = jwtutil.generateToken(user); // ✅ Use this, not generateToken(email)
-
-    return new AuthResponseDTO(token, user.getName(), user.getEmail(), user.getRoles());
-}
-
-
+    public boolean validateToken(String token) {
+        try {
+            String email = jwtUtil.extractEmail(token);
+            User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            
+            org.springframework.security.core.userdetails.UserDetails userDetails = 
+                org.springframework.security.core.userdetails.User.builder()
+                    .username(user.getEmail())
+                    .password(user.getPassword())
+                    .authorities(user.getRoles().stream()
+                        .map(role -> "ROLE_" + role.getName().replace("ROLE_", ""))
+                        .toArray(String[]::new))
+                    .build();
+            
+            return jwtUtil.validateToken(token, userDetails);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

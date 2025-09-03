@@ -23,7 +23,14 @@ public class RouteService {
     }
 
     public Object getAllRoutes() {
-      
-        throw new UnsupportedOperationException("Unimplemented method 'getAllRoutes'");
+        return routeRepository.findAll()
+            .stream()
+            .map(route -> new RouteDTO(
+                route.getSource(),
+                route.getDestination(),
+                route.getDistance(),
+                route.getDuration()
+            ))
+            .toList();
     }
 }

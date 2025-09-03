@@ -1,7 +1,5 @@
 package com.busreservation.config;
 
-
-
 import com.busreservation.entity.Role;
 import com.busreservation.repository.RoleRepository;
 import jakarta.annotation.PostConstruct;

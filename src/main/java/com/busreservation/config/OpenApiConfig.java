@@ -12,10 +12,13 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        final String securitySchemeName = "BearerAuth";
+        final String securitySchemeName = "bearerAuth";
 
         return new OpenAPI()
-            .info(new Info().title("Bus Reservation API").version("1.0"))
+            .info(new Info()
+                .title("Bus Reservation API")
+                .version("1.0")
+                .description("Simple Bus Reservation System API"))
             .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
             .components(new io.swagger.v3.oas.models.Components()
                 .addSecuritySchemes(securitySchemeName,

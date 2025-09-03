@@ -1,6 +1,7 @@
 package com.busreservation.entity;
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "seats")
 @Data
@@ -19,10 +20,12 @@ public class Seat {
     private boolean isBooked;
 
     @ManyToOne
+    @JsonBackReference(value = "trip-seats")
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
     @ManyToOne
+    @JsonBackReference(value = "booking-seats")
     @JoinColumn(name = "booking_id", nullable = true)
     private Booking booking;
 }

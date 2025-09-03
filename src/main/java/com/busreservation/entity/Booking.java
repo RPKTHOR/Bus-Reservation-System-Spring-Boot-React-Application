@@ -1,9 +1,10 @@
 package com.busreservation.entity;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "bookings")
@@ -27,10 +28,12 @@ public class Booking {
     private User user;
 
     @ManyToOne
+    @JsonBackReference(value = "trip-bookings")
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
     @OneToMany(mappedBy = "booking")
+    @JsonManagedReference(value = "booking-seats")
     private List<Seat> seats;
 
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)

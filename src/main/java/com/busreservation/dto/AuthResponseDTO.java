@@ -1,8 +1,7 @@
 package com.busreservation.dto;
 
-import java.util.Set;
 
-import com.busreservation.entity.Role;
+import java.util.List;
 
 import lombok.Data;
 import lombok.Getter;
@@ -17,9 +16,10 @@ public class AuthResponseDTO {
     private String token;
     private String name;
     private String email;
-    private Set<Role> roles;
 
-    public AuthResponseDTO(String token, String name, String email, Set<Role> roles) {
+    private List<String> roles;
+
+    public AuthResponseDTO(String token, String name, String email, List<String> roles) {
         this.token = token;
         this.name = name;
         this.email = email;

@@ -1,6 +1,6 @@
 package com.busreservation.security;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -24,14 +24,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: "));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-                List<GrantedAuthority> authorities = user.getRoles().stream()
-                    .map(role -> new SimpleGrantedAuthority(role.getName()))
-                    .collect(Collectors.toList());
+        Set<GrantedAuthority> authorities = user.getRoles().stream()
+            .map(role -> new SimpleGrantedAuthority(role.getName()))
+            .collect(Collectors.toSet());
 
-       return new org.springframework.security.core.userdetails.User(
-        user.getEmail(), user.getPassword(), authorities);
-}
+        return org.springframework.security.core.userdetails.User.builder()
+            .username(user.getEmail())
+            .password(user.getPassword())
+            .authorities(authorities)
+            .build();
     }
-
+}

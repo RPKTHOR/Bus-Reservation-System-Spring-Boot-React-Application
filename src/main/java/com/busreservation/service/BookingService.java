@@ -18,6 +18,7 @@ import com.busreservation.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+
 @Service
 @RequiredArgsConstructor
 public class BookingService {
@@ -26,6 +27,11 @@ public class BookingService {
     private final TripRepository tripRepository;
     private final SeatRepository seatRepository;
     private final UserRepository userRepository;
+
+    public Booking getBookingById(Long id) {
+        return bookingRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Booking not found"));
+    }
 
     public Booking holdSeats(BookingDTO dto) {
         Trip trip = tripRepository.findById(dto.getTripId())

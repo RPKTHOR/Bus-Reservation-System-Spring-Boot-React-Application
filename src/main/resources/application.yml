@@ -21,4 +21,15 @@ server:
   port: 8080
 
 jwt:
-  secret: your-very-secret-key-please-make-it-long
+  secret: your-very-secret-key-please-make-it-long-enough-for-security
+
+logging:
+  level:
+    com.busreservation: DEBUG
+    org.springframework.security: DEBUG
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

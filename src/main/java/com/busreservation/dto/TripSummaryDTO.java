@@ -7,11 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Getter
 @Setter
-public class TripDTO {
-    private Long busId;
-    private Long routeId;
+@Getter
+public class TripSummaryDTO {
+    private Long id;
+    private String busNumber;
+    private String busType;
+    private String operatorName;
+    private String routeSource;
+    private String routeDestination;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private double fare;

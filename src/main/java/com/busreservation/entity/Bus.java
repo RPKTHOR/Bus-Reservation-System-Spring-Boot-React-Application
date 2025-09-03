@@ -1,12 +1,17 @@
 package com.busreservation.entity;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "buses")
 @Data
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bus {
@@ -21,5 +26,7 @@ public class Bus {
     private String operatorName;
 
     @OneToMany(mappedBy = "bus")
+    @JsonIgnore
+    @JsonManagedReference(value = "bus-trips")
     private List<Trip> trips;
 }

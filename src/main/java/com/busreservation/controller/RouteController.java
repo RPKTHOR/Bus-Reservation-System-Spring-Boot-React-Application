@@ -1,8 +1,10 @@
 package com.busreservation.controller;
 
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +16,6 @@ import com.busreservation.entity.Route;
 import com.busreservation.service.RouteService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -22,10 +23,10 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/routes")
 @Tag(name = "Route Management", description = "Manage routes and stops")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "bearerAuth")
 public class RouteController {
 
     private final RouteService routeService;
+
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -35,7 +36,6 @@ public class RouteController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "List routes", description = "Returns all routes")
     public ResponseEntity<Object> getAllRoutes() {
         return ResponseEntity.ok(routeService.getAllRoutes());

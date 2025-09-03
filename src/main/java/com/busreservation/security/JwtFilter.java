@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtil jwtutil;
+    private JwtUtil jwtUtil;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -33,8 +33,11 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        // Skip JWT filter for auth endpoints
-        if (path.startsWith("/api/v1/auth")) {
+        
+        // Skip JWT filter for public endpoints
+        if (path.startsWith("/api/v1/auth") || 
+            path.startsWith("/swagger-ui") || 
+            path.startsWith("/v3/api-docs")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,23 +49,29 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             try {
-                email = jwtutil.extractEmail(token);
+                email = jwtUtil.extractEmail(token);
             } catch (Exception e) {
-                System.out.println("Invalid token: " + e.getMessage());
+                logger.error("Error extracting email from token: " + e.getMessage());
             }
-            
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            if (jwtutil.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                //System.out.println("Authenticated user: " + userDetails.getUsername());
-                //System.out.println("Authorities: " + userDetails.getAuthorities());
-
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                if (jwtUtil.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                userDetails, 
+                                null, 
+                                userDetails.getAuthorities()
+                            );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    
+                    logger.info("Successfully authenticated user: " + email);
+                }
+            } catch (Exception e) {
+                logger.error("Error during authentication: " + e.getMessage());
             }
         }
 
